@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STORM RACING | Official Racing Guide</title>
+    <style>
+        :root {
+            --accent: #CF9FFF;
+            --accent-glow: rgba(207, 159, 255, 0.4);
+            --bg-dark: #0b0c10;
+            --panel-bg: #14161f;
+            --panel-border: #2a2d3d;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--panel-border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 16px;
+        }
+
+        .brand h1 {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-links li button {
+            width: 100%;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links li button:hover, .nav-links li button.active {
+            background: rgba(207, 159, 255, 0.1);
+            color: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .page-section {
+            display: none;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Poster Header Styling (Main Page) */
+        .poster-header {
+            text-align: center;
+            border: 2px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 30px;
+            background: linear-gradient(180deg, rgba(207,159,255,0.08) 0%, rgba(20,22,31,1) 100%);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .poster-title {
+            font-size: 2.8rem;
+            letter-spacing: 4px;
+            color: #fff;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .poster-subtitle {
+            color: var(--accent);
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Grid Layout matching the poster */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .dash-card {
+            background: #0f1015;
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dash-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .dash-card h3 {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .dash-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Inline editable highlight */
+        [contenteditable="true"] {
+            outline: 1px dashed transparent;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: outline 0.2s;
+        }
+        [contenteditable="true"]:hover {
+            outline: 1px dashed var(--accent);
+            background: rgba(207, 159, 255, 0.05);
+        }
+
+        /* Data Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        th {
+            background: rgba(207, 159, 255, 0.1);
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #11131a;
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .btn-add {
+            background: var(--accent);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 30px;
+            border-top: 1px solid var(--panel-border);
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <div class="sidebar">
+        <div class="brand">
+            <h1>STORM SERVER</h1>
+        </div>
+        <ul class="nav-links">
+            <li><button class="active" onclick="showPage('main-overview')">Main Overview</button></li>
+            <li><button onclick="showPage('tracks')">Track Directory</button></li>
+            <li><button onclick="showPage('classes')">Racing Classes & Vehicles</button></li>
+            <li><button onclick="showPage('rules')">Rules of Racing</button></li>
+            <li><button onclick="showPage('standings')">Driver Championship</button></li>
+            <li><button onclick="showPage('profiles')">Driver Profiles</button></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- MAIN OVERVIEW / POSTER PAGE -->
+        <section id="main-overview" class="page-section active">
+            <div class="poster-header">
+                <h1 class="poster-title" contenteditable="true">STORM SERVER</h1>
+                <div class="poster-subtitle" contenteditable="true">OFFICIAL RACING GUIDE</div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dash-card" onclick="showPage('tracks')">
+                    <h3 contenteditable="true">## TRACK DIRECTORY</h3>
+                    <p contenteditable="true">A listing of all server tracks, categorized by terrain. Includes high-quality thumbnails and record lap times for circuits like "The Eye of the Storm Circuit".</p>
+                </div>
+
+                <div class="dash-card" onclick="showPage('classes')">
+                    <h3 contenteditable="true">## RACING CLASSES & VEHICLES</h3>
+                    <p contenteditable="true">Tables detailing vehicle categories, speed specifications, performance indexes, and weight constraints across Class 1 to Class 4 vehicles.</p>
+                </div>
+
+                <div class="dash-card" onclick="showPage('rules')">
+                    <h3 contenteditable="true">## RULES OF RACING</h3>
+                    <p contenteditable="true">Infographics and protocols covering flag signals (Yellow/Blue), pit lane procedures, and driver conduct guidelines for clean racing.</p>
+                </div>
+
+                <div class="dash-card" onclick="showPage('standings')">
+                    <h3 contenteditable="true">## STORM CHAMPIONSHIP</h3>
+                    <p contenteditable="true">Current standings and points leaderboard with team ranks, podium finishes, and championship score tracking.</p>
+                </div>
+
+                <div class="dash-card" onclick="showPage('profiles')" style="grid-column: span 2;">
+                    <h3 contenteditable="true">## DRIVER PROFILES</h3>
+                    <p contenteditable="true">Roster section displaying driver cards with generic profile portraits, stats, experience levels, and preferred racing classes.</p>
+                </div>
+            </div>
+
+            <div class="footer-text" contenteditable="true">
+                © 2026 STORM SERVER RACING ASSOCIATION. ALL RIGHTS RESERVED. | discord.gg/stormracing
+            </div>
+        </section>
+
+        <!-- TRACK DIRECTORY PAGE -->
+        <section id="tracks" class="page-section">
+            <h2 class="poster-subtitle">Track Directory</h2>
+            <div class="card-grid" id="track-container">
+                <div class="card">
+                    <h3 contenteditable="true">The Eye of the Storm</h3>
+                    <p contenteditable="true"><strong>Type:</strong> Road Circuit</p>
+                    <p contenteditable="true"><strong>Length:</strong> 3.4 km</p>
+                    <p contenteditable="true"><strong>Best Lap:</strong> 1:14.220</p>
+                </div>
+                <div class="card">
+                    <h3 contenteditable="true">Lightning Ridge</h3>
+                    <p contenteditable="true"><strong>Type:</strong> Off-Road / Dirt</p>
+                    <p contenteditable="true"><strong>Length:</strong> 2.8 km</p>
+                    <p contenteditable="true"><strong>Best Lap:</strong> 1:28.050</p>
+                </div>
+            </div>
+            <button class="btn-add" onclick="addCard('track-container', 'New Track', 'Road', '0.0 km', 'N/A')">+ Add Track</button>
+        </section>
+
+        <!-- RACING CLASSES PAGE -->
+        <section id="classes" class="page-section">
+            <h2 class="poster-subtitle">Racing Classes & Vehicles</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Events</th>
+                        <th>Specs</th>
+                        <th>Performance</th>
+                        <th>Vehicle Weight</th>
+                    </tr>
+                </thead>
+                <tbody contenteditable="true">
+                    <tr>
+                        <td>Class S</td>
+                        <td>250</td>
+                        <td>260-300 mph</td>
+                        <td>1450-1600</td>
+                        <td>2120 kg</td>
+                    </tr>
+                    <tr>
+                        <td>Class A</td>
+                        <td>250</td>
+                        <td>220-250 mph</td>
+                        <td>1200-1449</td>
+                        <td>2330 kg</td>
+                    </tr>
+                    <tr>
+                        <td>Class B</td>
+                        <td>300</td>
+                        <td>180-220 mph</td>
+                        <td>900-1199</td>
+                        <td>2470 kg</td>
+                    </tr>
+                    <tr>
+                        <td>Class C</td>
+                        <td>300</td>
+                        <td>160-200 mph</td>
+                        <td>600-999</td>
+                        <td>2570 kg</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- RULES OF RACING PAGE -->
+        <section id="rules" class="page-section">
+            <h2 class="poster-subtitle">Rules of Racing</h2>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 15px;">
+                <div class="card">
+                    <h3 contenteditable="true" style="color: var(--accent);">🏁 Flag Signals</h3>
+                    <p contenteditable="true">Yellow Flag: Hazard on track. Maintain speed and hold positions.<br>Blue Flag: Faster car approaching, yield safely.</p>
+                </div>
+                <div class="card">
+                    <h3 contenteditable="true" style="color: var(--accent);">🛠️ Pit Lane Protocol</h3>
+                    <p contenteditable="true">Speed limit enforced in pit lane. Re-enter track safely without crossing white exit line.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DRIVER CHAMPIONSHIP PAGE -->
+        <section id="standings" class="page-section">
+            <h2 class="poster-subtitle">Storm Championship</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Team</th>
+                        <th>Races</th>
+                        <th>Podiums</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody contenteditable="true">
+                    <tr>
+                        <td>1</td>
+                        <td>Team Storm Alpha</td>
+                        <td>30</td>
+                        <td>50</td>
+                        <td>1320</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Apex Predators</td>
+                        <td>28</td>
+                        <td>83</td>
+                        <td>1187</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- DRIVER PROFILES PAGE -->
+        <section id="profiles" class="page-section">
+            <h2 class="poster-subtitle">Driver Profiles</h2>
+            <div class="card-grid" id="profile-container">
+                <div class="card">
+                    <h3 contenteditable="true">Driver #1</h3>
+                    <p contenteditable="true"><strong>Team:</strong> Storm Racing</p>
+                    <p contenteditable="true"><strong>Preferred Class:</strong> Class 1</p>
+                </div>
+            </div>
+            <button class="btn-add" onclick="addProfile()">+ Add Driver</button>
+        </section>
+
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-links button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(pageId).classList.add('active');
+            
+            // Highlight current active tab in sidebar
+            const buttons = document.querySelectorAll('.nav-links button');
+            buttons.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(pageId)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function addCard(containerId, name, type, length, record) {
+            const container = document.getElementById(containerId);
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3 contenteditable="true">${name}</h3>
+                <p contenteditable="true"><strong>Type:</strong> ${type}</p>
+                <p contenteditable="true"><strong>Length:</strong> ${length}</p>
+                <p contenteditable="true"><strong>Best Lap:</strong> ${record}</p>
+            `;
+            container.appendChild(card);
+        }
+
+        function addProfile() {
+            const container = document.getElementById('profile-container');
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3 contenteditable="true">New Driver</h3>
+                <p contenteditable="true"><strong>Team:</strong> Unassigned</p>
+                <p contenteditable="true"><strong>Preferred Class:</strong> Class 3</p>
+            `;
+            container.appendChild(card);
+        }
+    </script>
+</body>
+</html>
